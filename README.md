@@ -60,10 +60,7 @@ Run the training script to learn the Q-table over the simulated environment epis
 ```bash
 python Microgrid/train.py
 ```
-*(Optional) You can specify a different config:*
-```bash
-python Microgrid/train.py Microgrid/configs/qlearn_v2.yaml
-```
+
 
 ### 2. Evaluate and Compare
 Run the evaluation script to pit the trained RL agent against the baseline fixed-rule controller. This script outputs a clear comparison table to the console and generates visualizations (a training curve and a 24-hour step-by-step comparison) in the `experiments/` folder.
