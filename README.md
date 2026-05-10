@@ -29,7 +29,7 @@ A custom `gymnasium`-compliant environment (`sim/microgrid_env.py`) simulates a 
 ## Project Structure
 
 ```text
-Internals_Basics/
+Microgrid/
 ├── sim/
 │   ├── microgrid_env.py      # Custom gymnasium environment
 │   └── fixed_controller.py   # Baseline heuristic controller for comparison
@@ -58,16 +58,36 @@ Run the training script to learn the Q-table over the simulated environment epis
 *By default, it uses `configs/qlearn_v1.yaml`.*
 
 ```bash
-python Internals_Basics/train.py
+python Microgrid/train.py
 ```
 *(Optional) You can specify a different config:*
 ```bash
-python Internals_Basics/train.py Internals_Basics/configs/qlearn_v2.yaml
+python Microgrid/train.py Microgrid/configs/qlearn_v2.yaml
 ```
 
 ### 2. Evaluate and Compare
 Run the evaluation script to pit the trained RL agent against the baseline fixed-rule controller. This script outputs a clear comparison table to the console and generates visualizations (a training curve and a 24-hour step-by-step comparison) in the `experiments/` folder.
 
 ```bash
-python Internals_Basics/evaluate.py
+python Microgrid/evaluate.py
 ```
+## Reproducibility
+
+To reproduce experiment 1 exactly:
+```bash
+python train.py configs/qlearn_v1.yaml
+```
+To reproduce experiment 2:
+```bash
+python train.py configs/qlearn_v2.yaml
+```
+Both use a fixed seed — anyone can clone this repo and get identical results.
+
+## Monitoring Plan (Deployment Design)
+
+If this system were deployed in a real microgrid, we would monitor the following:
+- **Average grid import cost per hour** — alert if cost exceeds 20% above the training baseline, which could indicate the policy is failing to utilise solar correctly.
+- **Battery SOC drift** — if battery stays below 20% for 3 or more consecutive hours, it signals the agent is not charging during solar surplus hours and policy retraining may be needed.
+- **Renewable utilisation rate** — track what percentage of solar generation is being self-consumed vs wasted. Target above 80%.
+- **Blackout frequency** — zero tolerance. Any unserved load event triggers an immediate alert.
+- **Grid price tier alignment** — verify the agent is consistently choosing DISCHARGE during peak price hours (17–21) and CHARGE during off-peak solar hours (10–14). A drift here means the policy is degrading.
