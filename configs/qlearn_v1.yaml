@@ -1,0 +1,5 @@
+# Q-Learning Hyperparameters Version 1
+epsilon: 0.3
+lr: 0.1
+gamma: 0.95
+episodes: 1000
