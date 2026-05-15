@@ -84,7 +84,14 @@ def main():
     # 4. Generate Plots
     
     # Plot A: Training Reward Curve
-    csv_path = os.path.join(experiments_dir, "results_1.csv")
+    csv_files = [
+    f for f in os.listdir(experiments_dir)
+    if f.startswith("results_policy") and f.endswith(".csv")
+    ]
+
+    csv_files.sort()
+
+    csv_path = os.path.join(experiments_dir, csv_files[-1])
     episodes, rewards = [], []
     try:
         with open(csv_path, 'r') as f:
